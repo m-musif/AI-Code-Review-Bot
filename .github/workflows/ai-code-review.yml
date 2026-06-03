@@ -9,9 +9,17 @@ jobs:
   test-workflow:
     runs-on: ubuntu-latest
 
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Print Message
-        run: echo "AI Code Review Bot is running successfully!"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Review Script
+        run: python review_bot/review.py
