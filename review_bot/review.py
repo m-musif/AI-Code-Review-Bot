@@ -1,19 +1,16 @@
 import os
-from google import genai
+import google.generativeai as genai
 
 api_key = os.getenv("GEMINI_API_KEY")
 
 if not api_key:
     raise ValueError("GEMINI_API_KEY is missing")
 
+genai.configure(api_key=api_key)
+
 try:
-    client = genai.Client(api_key=api_key)
-
-    response = client.models.generate_content(
-model="gemini-1.5-flash",
-        contents="Reply with: Hello from Gemini AI Code Review Bot"
-    )
-
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content("Reply with: Hello from Gemini AI Code Review Bot")
     print(response.text)
 
 except Exception as error:
