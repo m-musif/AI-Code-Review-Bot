@@ -22,7 +22,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Dependencies
-        run: pip install google-genai
+run: pip install google-generativeai
 
       - name: Run Review Script
         run: python review_bot/review.py
