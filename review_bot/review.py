@@ -8,13 +8,39 @@ if not api_key:
 
 client = Groq(api_key=api_key)
 
+with open("pr_diff.txt", "r") as file:
+    pr_diff = file.read()
+
+prompt = f"""
+You are a senior software engineer.
+
+Review the following GitHub Pull Request diff.
+
+Provide:
+1. Bugs
+2. Security issues
+3. Code quality issues
+4. Suggestions
+
+PR Diff:
+
+{pr_diff}
+"""
+
 try:
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
-        messages=[{"role": "user", "content": "Reply with: Hello from Groq AI Code Review Bot"}]
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
     )
+
+    print("\n===== AI CODE REVIEW =====\n")
     print(response.choices[0].message.content)
 
 except Exception as error:
     print("Groq API call failed.")
-    print("Reason:", error)
+    print(error)
