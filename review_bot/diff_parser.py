@@ -1,3 +1,6 @@
+import os
+
+
 IGNORED_FILE_PATTERNS = [
     ".gitkeep",
     "package-lock.json",
@@ -10,12 +13,31 @@ IGNORED_FILE_PATTERNS = [
 ]
 
 
+REVIEWABLE_EXTENSIONS = {
+    ".py",
+    ".js",
+    ".ts",
+    ".tsx",
+    ".jsx",
+    ".java",
+    ".go",
+    ".cpp",
+    ".c",
+    ".cs",
+    ".md",
+    ".yml",
+    ".yaml",
+}
+
+
 def should_review_file(file_name: str) -> bool:
     for pattern in IGNORED_FILE_PATTERNS:
         if pattern in file_name:
             return False
 
-    return True
+    _, extension = os.path.splitext(file_name)
+
+    return extension in REVIEWABLE_EXTENSIONS
 
 
 def split_diff_by_file(pr_diff: str) -> list[dict[str, str]]:
