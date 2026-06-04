@@ -1,12 +1,11 @@
 import os
-from groq import Groq
+
+from review_bot.ai_reviewer import generate_ai_review
 
 api_key = os.getenv("GROQ_API_KEY")
 
 if not api_key:
     raise ValueError("GROQ_API_KEY is missing")
-
-client = Groq(api_key=api_key)
 
 with open("pr_diff.txt", "r") as file:
     pr_diff = file.read()
@@ -28,17 +27,7 @@ PR Diff:
 """
 
 try:
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
-    )
-
-    review = response.choices[0].message.content
+    review = generate_ai_review(api_key, prompt)
 
     print("\n===== AI CODE REVIEW =====\n")
     print(review)
@@ -47,5 +36,5 @@ try:
         file.write(review)
 
 except Exception as error:
-    print("Groq API call failed.")
+    print("AI review generation failed.")
     print(error)
