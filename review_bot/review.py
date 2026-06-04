@@ -38,8 +38,13 @@ try:
         ]
     )
 
+    review = response.choices[0].message.content
+
     print("\n===== AI CODE REVIEW =====\n")
-    print(response.choices[0].message.content)
+    print(review)
+
+    with open("review.txt", "w") as file:
+        file.write(review)
 
 except Exception as error:
     print("Groq API call failed.")
