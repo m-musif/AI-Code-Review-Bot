@@ -13,6 +13,12 @@ if not api_key:
 pr_diff = read_pr_diff()
 changed_files = split_diff_by_file(pr_diff)
 
+if not changed_files:
+    message = "No reviewable files found in this pull request."
+    print(message)
+    save_review(message)
+    exit(0)
+
 all_reviews = []
 
 try:
