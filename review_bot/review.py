@@ -1,20 +1,20 @@
 import os
-from google import genai
+from groq import Groq
 
-api_key = os.getenv("GEMINI_API_KEY")
+api_key = os.getenv("GROQ_API_KEY")
 
 if not api_key:
-    raise ValueError("GEMINI_API_KEY is missing")
+    raise ValueError("GROQ_API_KEY is missing")
 
-client = genai.Client(api_key=api_key)
+client = Groq(api_key=api_key)
 
 try:
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-lite",
-        contents="Reply with: Hello from Gemini AI Code Review Bot"
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": "Reply with: Hello from Groq AI Code Review Bot"}]
     )
-    print(response.text)
+    print(response.choices[0].message.content)
 
 except Exception as error:
-    print("Gemini API call failed.")
+    print("Groq API call failed.")
     print("Reason:", error)
