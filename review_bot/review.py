@@ -1,6 +1,7 @@
 import os
 
 from review_bot.ai_reviewer import generate_ai_review
+from review_bot.prompts import CODE_REVIEW_PROMPT
 
 api_key = os.getenv("GROQ_API_KEY")
 
@@ -10,21 +11,7 @@ if not api_key:
 with open("pr_diff.txt", "r") as file:
     pr_diff = file.read()
 
-prompt = f"""
-You are a senior software engineer.
-
-Review the following GitHub Pull Request diff.
-
-Provide:
-1. Bugs
-2. Security issues
-3. Code quality issues
-4. Suggestions
-
-PR Diff:
-
-{pr_diff}
-"""
+prompt = CODE_REVIEW_PROMPT.format(pr_diff=pr_diff)
 
 try:
     review = generate_ai_review(api_key, prompt)
