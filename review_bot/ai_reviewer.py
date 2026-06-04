@@ -1,11 +1,13 @@
 from groq import Groq
 
+from review_bot.config import MODEL_NAME
+
 
 def generate_ai_review(api_key: str, prompt: str) -> str:
     client = Groq(api_key=api_key)
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model=MODEL_NAME,
         messages=[
             {
                 "role": "user",
