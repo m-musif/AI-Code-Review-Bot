@@ -1,6 +1,7 @@
 import os
 
 from review_bot.ai_reviewer import generate_ai_review
+from review_bot.config import MAX_FILES_TO_REVIEW
 from review_bot.diff_parser import split_diff_by_file
 from review_bot.github_utils import read_pr_diff, save_review
 from review_bot.prompts import FILE_REVIEW_PROMPT
@@ -12,6 +13,7 @@ if not api_key:
 
 pr_diff = read_pr_diff()
 changed_files = split_diff_by_file(pr_diff)
+changed_files = changed_files[:MAX_FILES_TO_REVIEW]
 
 if not changed_files:
     message = "No reviewable files found in this pull request."
