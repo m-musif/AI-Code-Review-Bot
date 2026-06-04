@@ -41,7 +41,13 @@ try:
             f"## File: `{file_name}`\n\n{file_review}"
         )
 
-    final_review = "\n\n---\n\n".join(all_reviews)
+    summary = f"Reviewed {len(changed_files)} file(s)."
+
+    final_review = (
+        summary
+        + "\n\n---\n\n"
+        + "\n\n---\n\n".join(all_reviews)
+    )
 
     print("\n===== AI CODE REVIEW =====\n")
     print(final_review)
