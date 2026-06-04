@@ -39,7 +39,7 @@ jobs:
           cat pr_diff.txt
 
       - name: Run Review Script
-        run: python review_bot/review.py
+        run: python -m review_bot.review
       - name: Comment AI Review on PR
         uses: actions/github-script@v7
         with:
