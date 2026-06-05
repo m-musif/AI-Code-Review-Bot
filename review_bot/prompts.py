@@ -13,6 +13,12 @@ For every issue found, assign one severity:
 🟡 MEDIUM
 🟢 LOW
 
+For every issue, include:
+- Severity
+- Issue
+- Suggested fix
+- Relevant line or code area if visible in the diff
+
 Review format:
 
 ## Bugs
