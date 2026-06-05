@@ -29,6 +29,24 @@ def get_changed_files(
     return response.json()
 
 
+def get_pull_request(
+    github_token: str,
+    repo_name: str,
+    pr_number: str
+) -> dict:
+    url = f"https://api.github.com/repos/{repo_name}/pulls/{pr_number}"
+
+    headers = {
+        "Authorization": f"Bearer {github_token}",
+        "Accept": "application/vnd.github+json",
+    }
+
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+
+    return response.json()
+
+
 def post_pr_comment(
     github_token: str,
     repo_name: str,
