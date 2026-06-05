@@ -6,9 +6,15 @@ from review_bot.config import (
     PR_NUMBER,
     REPO_NAME,
 )
-from review_bot.diff_parser import should_review_file
-from review_bot.github_utils import get_changed_files, save_review
+from review_bot.diff_parser import get_first_changed_line, should_review_file
+from review_bot.github_utils import (
+    get_changed_files,
+    get_pull_request,
+    post_inline_comment,
+    save_review,
+)
 from review_bot.prompts import FILE_REVIEW_PROMPT
+from review_bot.review_utils import extract_inline_comment
 
 if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY is missing")
@@ -17,6 +23,11 @@ if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN is missing")
 
 changed_files = get_changed_files(GITHUB_TOKEN, REPO_NAME, PR_NUMBER)
+
+pull_request = get_pull_request(GITHUB_TOKEN, REPO_NAME, PR_NUMBER)
+commit_id = pull_request["head"]["sha"]
+
+print(f"PR Head Commit: {commit_id}")
 
 reviewable_files = [
     file for file in changed_files
@@ -37,6 +48,7 @@ try:
     for changed_file in reviewable_files:
         file_name = changed_file["filename"]
         file_diff = changed_file["patch"]
+        line_number = get_first_changed_line(file_diff)
 
         prompt = FILE_REVIEW_PROMPT.format(
             file_name=file_name,
@@ -46,10 +58,26 @@ try:
         print(f"\n===== REVIEWING FILE: {file_name} =====\n")
 
         file_review = generate_ai_review(GROQ_API_KEY, prompt)
+        inline_comment = extract_inline_comment(file_review)
 
         all_reviews.append(
             f"## File: `{file_name}`\n\n{file_review}"
         )
+
+        if line_number:
+            try:
+                post_inline_comment(
+                    github_token=GITHUB_TOKEN,
+                    repo_name=REPO_NAME,
+                    pr_number=PR_NUMBER,
+                    commit_id=commit_id,
+                    file_path=file_name,
+                    line_number=line_number,
+                    body=inline_comment
+                )
+                print(f"Inline comment posted for {file_name} on line {line_number}")
+            except Exception as inline_error:
+                print(f"Inline comment failed for {file_name}: {inline_error}")
 
     summary = f"Reviewed {len(reviewable_files)} file(s)."
 
@@ -67,3 +95,4 @@ try:
 except Exception as error:
     print("AI review generation failed.")
     print(error)
+

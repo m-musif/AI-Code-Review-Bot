@@ -19,6 +19,11 @@ For every issue, include:
 - Suggested fix
 - Relevant line or code area if visible in the diff
 
+Also provide one short inline comment suggestion at the end using this exact format:
+
+INLINE_COMMENT:
+<one concise issue or suggestion for this file>
+
 Review format:
 
 ## Bugs
@@ -28,6 +33,9 @@ Review format:
 ## Code Quality Issues
 
 ## Suggestions
+
+INLINE_COMMENT:
+<short inline comment>
 
 Keep the review concise and actionable.
 """
