@@ -7,7 +7,12 @@ from review_bot.config import (
     REPO_NAME,
 )
 from review_bot.diff_parser import should_review_file
-from review_bot.github_utils import get_changed_files, get_pull_request, save_review
+from review_bot.github_utils import (
+    get_changed_files,
+    get_pull_request,
+    post_inline_comment,
+    save_review,
+)
 from review_bot.prompts import FILE_REVIEW_PROMPT
 
 if not GROQ_API_KEY:
