@@ -61,6 +61,20 @@ try:
             f"## File: `{file_name}`\n\n{file_review}"
         )
 
+        try:
+            post_inline_comment(
+                github_token=GITHUB_TOKEN,
+                repo_name=REPO_NAME,
+                pr_number=PR_NUMBER,
+                commit_id=commit_id,
+                file_path=file_name,
+                line_number=1,
+                body=f"🤖 AI review generated for `{file_name}`.\n\nSee full PR comment for details."
+            )
+            print(f"Inline comment posted for {file_name}")
+        except Exception as inline_error:
+            print(f"Inline comment failed for {file_name}: {inline_error}")
+
     summary = f"Reviewed {len(reviewable_files)} file(s)."
 
     final_review = (
