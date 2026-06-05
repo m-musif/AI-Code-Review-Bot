@@ -3,3 +3,5 @@ __pycache__/
 .env
 venv/
 .venv/
+pr_diff.txt
+review.txt
