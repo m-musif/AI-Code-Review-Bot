@@ -7,7 +7,7 @@ from review_bot.config import (
     REPO_NAME,
 )
 from review_bot.diff_parser import should_review_file
-from review_bot.github_utils import get_changed_files, save_review
+from review_bot.github_utils import get_changed_files, get_pull_request, save_review
 from review_bot.prompts import FILE_REVIEW_PROMPT
 
 if not GROQ_API_KEY:
@@ -17,6 +17,11 @@ if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN is missing")
 
 changed_files = get_changed_files(GITHUB_TOKEN, REPO_NAME, PR_NUMBER)
+
+pull_request = get_pull_request(GITHUB_TOKEN, REPO_NAME, PR_NUMBER)
+commit_id = pull_request["head"]["sha"]
+
+print(f"PR Head Commit: {commit_id}")
 
 reviewable_files = [
     file for file in changed_files
