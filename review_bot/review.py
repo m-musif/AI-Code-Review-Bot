@@ -14,6 +14,7 @@ from review_bot.github_utils import (
     save_review,
 )
 from review_bot.prompts import FILE_REVIEW_PROMPT
+from review_bot.review_utils import extract_inline_comment
 
 if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY is missing")
@@ -57,6 +58,7 @@ try:
         print(f"\n===== REVIEWING FILE: {file_name} =====\n")
 
         file_review = generate_ai_review(GROQ_API_KEY, prompt)
+        inline_comment = extract_inline_comment(file_review)
 
         all_reviews.append(
             f"## File: `{file_name}`\n\n{file_review}"
@@ -71,10 +73,7 @@ try:
                     commit_id=commit_id,
                     file_path=file_name,
                     line_number=line_number,
-                    body=(
-                        f"🤖 AI review generated for `{file_name}`.\n\n"
-                        "See full PR comment for details."
-                    )
+                    body=inline_comment
                 )
                 print(f"Inline comment posted for {file_name} on line {line_number}")
             except Exception as inline_error:
@@ -96,3 +95,4 @@ try:
 except Exception as error:
     print("AI review generation failed.")
     print(error)
+
