@@ -30,7 +30,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Dependencies
-        run: pip install groq
+        run: pip install groq requests
 
       - name: Show PR Diff
         run: |
