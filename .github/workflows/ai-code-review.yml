@@ -32,11 +32,6 @@ jobs:
       - name: Install Dependencies
         run: pip install groq requests
 
-      - name: Show PR Diff
-        run: |
-          git fetch origin main
-          git diff origin/main...HEAD > pr_diff.txt
-          cat pr_diff.txt
 
       - name: Run Review Script
         run: python -m review_bot.review
