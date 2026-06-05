@@ -67,3 +67,15 @@ def split_diff_by_file(pr_diff: str) -> list[dict[str, str]]:
         })
 
     return files
+
+
+def get_first_changed_line(patch: str) -> int | None:
+    for line in patch.splitlines():
+        if line.startswith("@@"):
+            parts = line.split(" ")
+            new_file_info = parts[2]
+            line_number = new_file_info.split(",")[0].replace("+", "")
+            return int(line_number)
+
+    return None
+
