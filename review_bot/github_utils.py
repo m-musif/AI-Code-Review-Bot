@@ -53,3 +53,36 @@ def post_pr_comment(
     )
 
     response.raise_for_status()
+
+
+def post_inline_comment(
+    github_token: str,
+    repo_name: str,
+    pr_number: str,
+    commit_id: str,
+    file_path: str,
+    line_number: int,
+    body: str
+) -> None:
+    url = f"https://api.github.com/repos/{repo_name}/pulls/{pr_number}/comments"
+
+    headers = {
+        "Authorization": f"Bearer {github_token}",
+        "Accept": "application/vnd.github+json",
+    }
+
+    payload = {
+        "body": body,
+        "commit_id": commit_id,
+        "path": file_path,
+        "line": line_number,
+        "side": "RIGHT"
+    }
+
+    response = requests.post(
+        url,
+        headers=headers,
+        json=payload
+    )
+
+    response.raise_for_status()
